@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Film Green Book · Art Department Carbon Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#0E3B2C;--w:#fff;--tint:color-mix(in srgb,var(--g) 6%,#fff);--tint2:color-mix(in srgb,var(--g) 12%,#fff);--line:color-mix(in srgb,var(--g) 20%,#fff);--mute:color-mix(in srgb,var(--g) 68%,#fff);--font:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--w);color:var(--g);font:15px/1.6 var(--font);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header,main,footer{max-width:1120px;margin:0 auto;padding-left:20px;padding-right:20px}
+header{padding-top:44px;padding-bottom:12px}
+h1{font:700 clamp(32px,5.5vw,52px)/1.05 var(--font);letter-spacing:-.03em;margin:0 0 12px}
+header p{margin:0;color:var(--mute);max-width:58ch}
+main{padding-top:20px;padding-bottom:60px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:28px;align-items:start}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+h2{font:600 20px var(--font);letter-spacing:-.01em;margin:0 0 14px}
+.item{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.g{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.g>label{grid-column:span 2;display:flex;flex-direction:column;font-size:12.5px;color:var(--mute);font-weight:500;position:relative;gap:4px}
+.g>label.w3{grid-column:span 3}.g>label.w6{grid-column:span 6}
+@media(max-width:560px){.g>label,.g>label.w3{grid-column:span 6}}
+input,select{font:inherit;color:var(--g);background:var(--tint);border:1px solid transparent;border-radius:10px;padding:8px 10px;min-height:40px;width:100%}
+input:focus,select:focus{outline:none;border-color:var(--g);background:var(--w)}
+:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+input:disabled{opacity:.5}
+.sg{position:absolute;top:100%;left:0;right:0;z-index:20;margin:4px 0 0;padding:4px;list-style:none;background:var(--w);border:1px solid var(--g);border-radius:12px;max-height:230px;overflow:auto;box-shadow:0 8px 24px rgba(14,59,44,.15)}
+.sg[hidden]{display:none}
+.sg li{padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13.5px;color:var(--g);line-height:1.4}
+.sg li:hover{background:var(--tint2)}
+.sg li.none{cursor:default;color:var(--mute)}
+.key{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;max-width:560px;font-size:13.5px}
+.key summary{cursor:pointer;font-weight:600}
+.key .kr{display:flex;gap:6px;margin:10px 0 6px}
+.key .kr button{white-space:nowrap}
+.key ol{margin:8px 0 0;padding-left:18px;color:var(--mute);font-size:12.5px}
+.addr{display:flex;gap:6px}
+.addr button{white-space:nowrap;padding:0 14px;border-radius:10px;background:var(--g);color:var(--w);min-height:40px}
+.modal{position:fixed;inset:0;background:rgba(14,59,44,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal[hidden]{display:none}
+.modal .box{background:var(--w);border-radius:16px;width:min(520px,100%);overflow:hidden}
+.modal .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-weight:600}
+.modal #pc{height:min(520px,70vh)}
+.hint{grid-column:span 6;font-size:12.5px;color:var(--mute);min-height:1.2em}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap}
+.mini{font-size:13px;color:var(--mute)}
+.mini b{color:var(--g)}
+button{font:600 14px var(--font);border-radius:999px;border:1px solid var(--g);background:var(--w);color:var(--g);padding:8px 16px;cursor:pointer}
+button.add{background:var(--g);color:var(--w);width:100%;padding:13px;font-size:15px}
+button.del{border-color:var(--line);color:var(--mute)}
+a.map{color:var(--g);font-weight:600;font-size:12.5px}
+.panel{background:var(--g);color:var(--w);border-radius:18px;padding:24px;position:sticky;top:12px}
+.panel .lab{font-size:14px;opacity:.8}
+.big{font:700 clamp(48px,8vw,72px)/1 var(--font);letter-spacing:-.04em;margin:8px 0 14px}
+.big small{font:500 16px var(--font);letter-spacing:0;margin-left:8px;opacity:.8}
+.kv{display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(255,255,255,.25);padding:8px 0;font-size:14px}
+.kv span{opacity:.85}.kv b{white-space:nowrap}
+.lvl{margin-top:14px;padding:12px 16px;border-radius:12px;font-weight:600;background:var(--tint2)}
+.lvl.high{background:var(--g);color:var(--w)}
+.save{background:var(--tint);border-radius:14px;padding:18px;margin-top:14px}
+.save h3{margin:0 0 8px;font:600 16px var(--font)}
+.save ul,.tips ul{margin:0;padding-left:18px}
+.save li,.tips li{margin:4px 0}
+.sec{margin-top:28px}
+.sug{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px}
+.sug .d{font-weight:700;background:var(--tint2);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:24px;text-align:center;color:var(--mute);margin-bottom:14px}
+.note{font-size:12.5px;color:var(--mute);margin-top:16px}
+footer{padding-bottom:36px}
+</style>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
+</head>
+<body>
+<header>
+<h1>Film Green Book</h1>
+<p>See how much carbon your art department saves depending on where and how you source props and materials. Add an item, pick a purchase method and route, and get the savings and alternatives right away.</p>
+<details class="key" id="keybox">
+<summary>Address search settings: <span id="kstat">OpenStreetMap (no Kakao key)</span></summary>
+<div class="kr"><input id="kkey" placeholder="Paste your Kakao JavaScript key" autocomplete="off"><button type="button" id="ksave">Save</button><button type="button" class="del" id="kclear">Clear</button></div>
+<ol><li>In Kakao Developers, create an app and register this site's address under Platform, Web.</li><li>Turn on Kakao Map in the product settings.</li><li>Copy the JavaScript key and paste it above. It is stored only in this browser.</li></ol>
+</details>
+</header>
+<main>
+<section aria-label="Props list">
+<h2>Props and materials</h2>
+<div id="items"></div>
+<button class="add" id="add">Add an item</button>
+<p class="note">Press Find address to search a Korean address inside the app (Daum Postcode). The distance by road is then filled in automatically, and you can still edit it. You can also just type a full address and press Enter or click away: the distance is calculated without picking from the list. With a Kakao key set in the script, results come from Kakao Maps.</p>
+</section>
+<aside aria-label="Results">
+<div class="panel">
+<div class="lab">Total carbon emissions for all purchases</div>
+<div class="big"><span id="total">0</span><small>kg CO₂e</small></div>
+<div class="kv"><span>If every item were bought new on Coupang, shipped individually</span><b id="base">0</b></div>
+<div class="kv"><span>Production</span><b id="prod">0</b></div>
+<div class="kv"><span>Packaging, transport, and travel</span><b id="trans">0</b></div>
+</div>
+<div id="lvl" class="lvl"></div>
+<div class="save" id="save"></div>
+</aside>
+<section id="sugwrap" class="sec" style="grid-column:1/-1"></section>
+</main>
+<div class="modal" id="modal" hidden><div class="box"><div class="bar"><span>Find address</span><button type="button" id="mclose">Close</button></div><div id="pc"></div></div></div>
+<footer class="note">
+All factors are simplified estimates based on public averages. For production-grade numbers, edit the <code>CFG</code> block at the top of the script. The meal and water equivalents are comparison metrics, not actual quantities delivered.
+</footer>
+
+<script>
+/* ===== Kakao Maps JavaScript key =====
+   Paste your key between the quotes. Leave empty to use the OpenStreetMap fallback.
+   This key is meant for browsers and is protected by the web domain you register at Kakao Developers. */
+const KAKAO_JS_KEY='';
+/* ===== Settings: edit factors here (all estimates) ===== */
+const CFG={
+ // category: [new-product production kgCO2e/kg, water footprint L/kg]
+ cat:{'Wood / plywood':[0.9,50],'Fabric / costume':[15,6000],'Plastic':[3,200],'Metal':[4,300],'Paper / cardboard':[1.3,400],'Glass / ceramic':[1.2,30],'Furniture / finished goods':[2.5,300],'Electronics':[20,1500],'Paint / chemicals':[3,100],'Other':[2,200]},
+ // method: mult = production emissions vs. buying new, pk = packaging + delivery kgCO2e per parcel
+ method:{
+  coupang:{n:'Coupang',on:1,mult:1,pk:0.55},
+  naver:{n:'Naver Shopping',on:1,mult:1,pk:0.7},
+  daiso:{n:'Daiso store',on:0,mult:1},
+  danggeun:{n:'Danggeun (used)',on:0,mult:0.05},
+  rental:{n:'Prop rental house',on:0,mult:0.03},
+  reuse:{n:'Reuse from stock / scrap',on:0,mult:0.01}
+ },
+ mode:{walk:['Walk / bike',0],transit:['Public transit',0.07],car:['Car',0.19],van:['Van / truck',0.28]}, // kgCO2e per km
+ truck:0.00015, // freight kgCO2e per kg-km
+ road:1.3,      // straight line to road distance (fallback if routing fails)
+ meal:2.0, drink:2, tree:6.6, mid:20, high:50
+};
+const NOREUSE=['Paint / chemicals'];
+/* ===== Helpers ===== */
+const $=s=>document.querySelector(s),f1=n=>(Math.round(n*10)/10).toLocaleString('en-US'),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const newItem=()=>({name:'',cat:'Wood / plywood',w:1,q:1,method:'coupang',ship:'single',b:1,mode:'transit',o:'',d:'',oc:null,dc:null,km:0,hint:''});
+let items=[newItem()];
+function hv(a,b){const r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]),h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 2*6371*Math.asin(Math.sqrt(h))}
+/* ===== Calculation ===== */
+function calc(it,ov={}){
+ const k=ov.method||it.method,m=CFG.method[k],c=CFG.cat[it.cat],w=it.w*it.q,km=it.km||0;
+ const prod=w*c[0]*m.mult;let tr;
+ if(m.on){const b=(ov.ship||it.ship)==='bundle'?Math.max(1,ov.b||it.b):1;tr=Math.ceil(it.q/b)*m.pk+w*km*CFG.truck}
+ else tr=km*2*CFG.mode[it.mode][1]+(k==='daiso'?w*150*CFG.truck:0);
+ return{prod,tr,t:prod+tr,water:w*c[1]*(1-m.mult)}}
+const base=it=>calc(it,{method:'coupang',ship:'single'});
+const label=(k,sh)=>CFG.method[k].n+(CFG.method[k].on?(sh==='bundle'?', bundled':', shipped individually'):'');
+/* ===== Address search: Kakao Maps (if key set) with OpenStreetMap fallback ===== */
+const KAKAO={ok:false};
+const KEYNAME='fgb_kakao_key';
+function getKey(){try{return localStorage.getItem(KEYNAME)||KAKAO_JS_KEY}catch(e){return KAKAO_JS_KEY}}
+function setStat(t){$('#kstat').textContent=t}
+function loadKakao(){
+ const key=getKey();$('#kkey').value=key;
+ if(!key){setStat('OpenStreetMap (no Kakao key)');return}
+ setStat('Connecting to Kakao Maps…');
+ const sc=document.createElement('script');
+ sc.src='https://dapi.kakao.com/v2/maps/sdk.js?appkey='+encodeURIComponent(key)+'&libraries=services&autoload=false';
+ sc.onload=()=>kakao.maps.load(()=>{KAKAO.places=new kakao.maps.services.Places();KAKAO.geo=new kakao.maps.services.Geocoder();KAKAO.ok=true;setStat('Kakao Maps active')});
+ sc.onerror=()=>setStat('Kakao failed to load, using OpenStreetMap. Check the key and registered domain.');
+ document.head.appendChild(sc);
+ setTimeout(()=>{if(!KAKAO.ok)setStat('Kakao not responding, using OpenStreetMap. Check the key and registered domain.')},8000)}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const kOK=()=>kakao.maps.services.Status.OK;
+function kSearch(q){return new Promise(res=>{
+ KAKAO.places.keywordSearch(q,(d,st)=>{
+  if(st===kOK())return res(d.map(p=>({label:p.place_name,sub:p.road_address_name||p.address_name,lat:+p.y,lon:+p.x})));
+  KAKAO.geo.addressSearch(q,(d2,st2)=>res(st2===kOK()?d2.map(p=>({label:(p.road_address&&p.road_address.address_name)||p.address_name,sub:p.address_name,lat:+p.y,lon:+p.x})):[]))},{size:5})})}
+async function nSearch(q,limit=5){
+ const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit='+limit+'&countrycodes=kr&accept-language=ko,en&q='+encodeURIComponent(q)),j=await r.json();
+ return j.map(p=>({label:p.display_name.split(', ').slice(0,3).join(', '),sub:p.display_name,lat:+p.lat,lon:+p.lon}))}
+async function pSearch(q,limit=5){
+ const r=await fetch('https://photon.komoot.io/api/?limit='+limit+'&bbox=124.5,33,131.9,38.7&q='+encodeURIComponent(q)),j=await r.json();
+ return j.features.map(f=>{const p=f.properties,c=f.geometry.coordinates,st=p.street?(p.housenumber?p.street+' '+p.housenumber:p.street):'';
+  const parts=[p.name,st,p.district||p.locality,p.city||p.county,p.state].filter((x,n,a)=>x&&a.indexOf(x)===n);
+  return{label:parts.slice(0,3).join(', '),sub:parts.join(', '),lat:c[1],lon:c[0]}})}
+async function osmSearch(q,limit=5){
+ let ok=false,r=[];
+ try{r=await nSearch(q,limit);ok=true}catch(e){}
+ if(!r.length){try{r=await pSearch(q,limit);ok=true}catch(e){}}
+ if(!r.length&&!ok)throw new Error('network');
+ return r}
+const searchPlaces=q=>KAKAO.ok?kSearch(q):osmSearch(q);
+async function locate(cands){
+ for(let n=0;n<cands.length;n++){const q=cands[n];
+  try{let r=[];
+   if(KAKAO.ok){
+    r=await new Promise(res=>KAKAO.geo.addressSearch(q,(d,st)=>res(st===kOK()?d:[])));
+    if(r.length)return[+r[0].y,+r[0].x];
+    r=await kSearch(q)}
+   else{if(n)await sleep(1100);r=await osmSearch(q,1)}
+   if(r.length)return[r[0].lat,r[0].lon]}catch(e){}}
+ return null}
+const timers={};
+function search(i,k,row){
+ const key=i+k,q=items[i][k].trim(),ul=row.querySelector(`[data-sg="${k}"]`),h=row.querySelector('[data-hint]');clearTimeout(timers[key]);
+ if(q.length<2){ul.hidden=true;return}
+ timers[key]=setTimeout(async()=>{
+  if(items[i]&&items[i][k].trim()!==q)return;
+  h.textContent='Searching…';let j=[],fail=false;
+  try{j=await searchPlaces(q)}catch(e){fail=true}
+  if(!items[i]||items[i][k].trim()!==q)return;
+  ul._r=j;ul._q=q;
+  ul.innerHTML=j.map((p,n)=>`<li data-n="${n}"><b>${esc(p.label)}</b><br><span class="mini">${esc(p.sub||'')}</span></li>`).join('')
+   +`<li data-raw="1"><b>Use “${esc(q)}” as typed</b><br><span class="mini">${fail?'Search service could not be reached. The address is kept and you can enter the distance.':j.length?'Keep exactly what you typed':'No matches. The address is kept and you can enter the distance.'}</span></li>`;
+  h.textContent=fail?'Search service could not be reached. Use “as typed”, or enter the distance manually.':'';
+  ul.hidden=false},KAKAO.ok?300:600)}
+async function route(i,row){
+ const it=items[i],h=row.querySelector('[data-hint]');
+ if(!it.oc||!it.dc){h.textContent='';return}
+ h.textContent='Calculating distance…';
+ try{const [a,b]=[it.oc,it.dc],r=await fetch(`https://router.project-osrm.org/route/v1/driving/${a[1]},${a[0]};${b[1]},${b[0]}?overview=false`);
+  const j=await r.json();it.km=Math.round(j.routes[0].distance/100)/10;it.hint='Road distance by OSRM';}
+ catch(e){it.km=Math.round(hv(it.oc,it.dc)*CFG.road*10)/10;it.hint='Estimated from straight-line distance × '+CFG.road}
+ h.textContent=it.hint;row.querySelector('[data-k=km]').value=it.km;mapLink(i);update()}
+/* ===== In-app address search (Daum Postcode) ===== */
+function openFind(i,k){
+ const modal=$('#modal'),box=$('#pc');box.innerHTML='';modal.hidden=false;
+ if(typeof daum==='undefined'||!daum.Postcode){box.innerHTML='<p style="padding:16px">Address search could not load. Check your connection, or type the address and pick a suggestion.</p>';return}
+ new daum.Postcode({width:'100%',height:'100%',oncomplete:d=>{
+  const it=items[i];if(!it)return;
+  const road=d.roadAddress||d.jibunAddress||d.address;
+  it[k]=road+(d.buildingName?` (${d.buildingName})`:'');it[k+'c']=null;
+  modal.hidden=true;
+  const row=document.querySelector(`.item[data-i="${i}"]`);
+  if(row){row.querySelector(`[data-k="${k}"]`).value=it[k];mapLink(i)}
+  geocode(i,k,[d.roadAddress,d.jibunAddress,d.address,d.buildingName&&d.sigungu+' '+d.buildingName].filter(Boolean))}}).embed(box)}
+async function geocode(i,k,cands){
+ const row=document.querySelector(`.item[data-i="${i}"]`);if(!row)return;const it=items[i],h=row.querySelector('[data-hint]');
+ h.textContent='Locating address…';
+ const c=await locate(cands);if(c)it[k+'c']=c;
+ if(it.oc&&it.dc)return route(i,row);
+ h.textContent=it[k+'c']?'Now find the other address to calculate the distance.':'Could not locate this address on the map. Enter the distance manually.'}
+/* ===== UI ===== */
+function rowHTML(it,i){
+ const m=CFG.method[it.method],opt=(o,v)=>Object.entries(o).map(([k,x])=>`<option value="${k}"${k===v?' selected':''}>${Array.isArray(x)?x[0]:x.n}</option>`).join('');
+ const cats=Object.keys(CFG.cat).map(c=>`<option${c===it.cat?' selected':''}>${c}</option>`).join('');
+ const bun=it.ship==='bundle';
+ const ship=m.on?`<label>Shipping<select data-k="ship"><option value="single"${!bun?' selected':''}>Individual</option><option value="bundle"${bun?' selected':''}>Bundled</option></select></label>
+  <label>Items per box<input type="number" min="1" data-k="b" value="${bun?it.b:1}" ${bun?'':'disabled'}></label>`
+  :`<label class="w3">Travel mode (round trip)<select data-k="mode">${opt(CFG.mode,it.mode)}</select></label>`;
+ return `<div class="item" data-i="${i}"><div class="g">
+ <label class="w3">Item name<input data-k="name" value="${esc(it.name)}" placeholder="e.g. Set plywood"></label>
+ <label class="w3">Material<select data-k="cat">${cats}</select></label>
+ <label>Weight each (kg)<input type="number" min="0" step="0.1" data-k="w" value="${it.w}"></label>
+ <label>Quantity<input type="number" min="1" data-k="q" value="${it.q}"></label>
+ <label>Purchase method<select data-k="method">${opt(CFG.method,it.method)}</select></label>
+ ${ship}
+ <label class="w3">Origin (seller / warehouse)<div class="addr"><input data-k="o" autocomplete="off" value="${esc(it.o)}" placeholder="Type, or press Find address"><button type="button" data-find="o">Find address</button></div><ul class="sg" data-sg="o" hidden></ul></label>
+ <label class="w3">Destination (set / workshop)<div class="addr"><input data-k="d" autocomplete="off" value="${esc(it.d)}" placeholder="Type, or press Find address"><button type="button" data-find="d">Find address</button></div><ul class="sg" data-sg="d" hidden></ul></label>
+ <label>Distance (km, one way)<input type="number" min="0" step="0.1" data-k="km" value="${it.km}"></label>
+ <label style="justify-content:flex-end"><a class="map" data-map target="_blank" rel="noopener">Open in Google Maps</a></label>
+ <div class="hint" data-hint>${esc(it.hint)}</div>
+ </div><div class="row"><span class="mini" data-out></span><button class="del" data-del>Remove</button></div></div>`}
+function render(){
+ $('#items').innerHTML=items.length?items.map(rowHTML).join(''):'<div class="empty">No items yet. Add one to start calculating.</div>';
+ items.forEach((_,i)=>mapLink(i));update()}
+function mapLink(i){const it=items[i],a=document.querySelector(`.item[data-i="${i}"] [data-map]`);if(!a)return;
+ a.href='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(it.o)+'&destination='+encodeURIComponent(it.d)}
+function update(){
+ let T=0,B=0,P=0,R=0,W=0;const rows=[];
+ items.forEach((it,i)=>{const c=calc(it),b=base(it);T+=c.t;B+=b.t;P+=c.prod;R+=c.tr;W+=c.water;rows.push([it,c]);
+  const el=document.querySelector(`.item[data-i="${i}"] [data-out]`);
+  if(el)el.innerHTML=`<b>${f1(c.t)} kg</b> (production ${f1(c.prod)} + transport ${f1(c.tr)})`});
+ $('#total').textContent=f1(T);$('#base').textContent=f1(B)+' kg';$('#prod').textContent=f1(P)+' kg';$('#trans').textContent=f1(R)+' kg';
+ const L=T>=CFG.high?['high','High emissions. Check the alternatives below.']:T>=CFG.mid?['mid','Moderate emissions. See if any items can be reduced.']:['low','Low emissions.'];
+ $('#lvl').className='lvl '+L[0];$('#lvl').textContent=L[1];
+ const S=Math.max(0,B-T),meals=S/CFG.meal;
+ $('#save').innerHTML=`<h3>Saved by your sourcing choices</h3><ul>
+ <li><b>${f1(S)} kg</b> of carbon avoided${B>0?` (${f1(S/B*100)}%)`:''}</li>
+ <li>About <b>${f1(meals)} meals</b> of carbon footprint, or <b>${f1(meals/3)} people</b> eating three meals a day for a day</li>
+ <li><b>${Math.round(W).toLocaleString('en-US')} L</b> of water footprint avoided, enough drinking water for <b>${Math.round(W/CFG.drink).toLocaleString('en-US')} people</b> for a day</li>
+ <li>The yearly CO₂ absorption of <b>${f1(S/CFG.tree)} trees</b></li></ul>`;
+ suggest(rows,T)}
+function suggest(rows,T){
+ const out=[];
+ rows.forEach(([it,c])=>{let best=null;
+  Object.keys(CFG.method).forEach(k=>{const m=CFG.method[k];
+   if(NOREUSE.includes(it.cat)&&['danggeun','rental','reuse'].includes(k))return;
+   if(k===it.method&&!(m.on&&it.ship==='single'))return;
+   const ov=m.on?{method:k,ship:'bundle',b:it.q}:{method:k},a=calc(it,ov);
+   if(!best||a.t<best.a.t)best={k,a,sh:m.on?'bundle':''}});
+  if(best&&c.t-best.a.t>=0.3&&(c.t-best.a.t)/c.t>=0.1)out.push({it,c,best,d:c.t-best.a.t})});
+ out.sort((x,y)=>y.d-x.d);
+ const tot=out.reduce((s,x)=>s+x.d,0);
+ let h='';
+ if(out.length){h+=`<h2>Ways to cut emissions</h2><p class="mini">Applying every alternative below could save another <b>${f1(tot)} kg</b> (${f1(tot/Math.max(T,0.01)*100)}%). Check stock, quality, and schedule before switching.</p>`;
+  out.forEach(x=>{h+=`<div class="sug"><b>${esc(x.it.name||'Untitled item')}</b><br>${label(x.it.method,x.it.ship)}: ${f1(x.c.t)} kg → <b>${label(x.best.k,x.best.sh)}</b>: ${f1(x.best.a.t)} kg <span class="d">−${f1(x.d)} kg</span></div>`})}
+ h+=`<div class="sec tips"><h2>How to reduce carbon</h2><ul>
+ <li><b>Reuse first.</b> Reusing stock, scrap, or rental props cuts nearly all production emissions, which are the largest share for most items.</li>
+ <li><b>Buy used (Danggeun).</b> Used furniture, fabric, and fixtures avoid new production. Pick up in one trip.</li>
+ <li><b>Bundle online orders.</b> On Coupang and Naver, combine items into fewer boxes instead of shipping each one separately.</li>
+ <li><b>Cut trips and distance.</b> Combine store pickups, source close to the set, and use public transit or a shared van instead of a car.</li>
+ <li><b>Choose lower-carbon materials.</b> Fabric and electronics have the highest footprint per kg. Wood, paper, and glass are much lower.</li>
+ <li><b>Buy only what you need.</b> Rent for one-day items, avoid spares, and plan quantities with the shooting schedule.</li>
+ <li><b>Plan the afterlife.</b> After wrap, store or donate props and scrap so the next production can reuse them.</li></ul></div>`;
+ $('#sugwrap').innerHTML=h}
+/* ===== Events ===== */
+$('#items').addEventListener('input',e=>{
+ const t=e.target,k=t.dataset.k,row=t.closest('.item');if(!k)return;const i=+row.dataset.i,it=items[i];
+ it[k]=t.type==='number'?(parseFloat(t.value)||0):t.value;
+ if(k==='o'||k==='d'){it[k+'c']=null;mapLink(i);search(i,k,row);return}
+ if(k==='km')it.hint='Entered manually';
+ if(k==='q'&&it.ship==='bundle'&&!it.b)it.b=it.q;
+ update()});
+$('#items').addEventListener('change',e=>{const k=e.target.dataset.k;
+ if(k==='o'||k==='d'){const row=e.target.closest('.item'),i=+row.dataset.i,it=items[i],v=it[k].trim();
+  setTimeout(()=>{const ul=row.querySelector(`[data-sg="${k}"]`);if(!ul||ul.hidden)return;ul.hidden=true;if(items[i]&&items[i][k].trim().length>=3&&!items[i][k+'c'])geocode(i,k,[items[i][k].trim()])},350);return}
+ if(k==='method'||k==='ship'){const it=items[+e.target.closest('.item').dataset.i];if(k==='ship'&&it.ship==='bundle'&&it.b<2)it.b=it.q;render()}});
+function pick(li){
+ const ul=li.parentNode,k=ul.dataset.sg,row=li.closest('.item'),i=+row.dataset.i,it=items[i];if(!it||ul.hidden)return;
+ if(li.dataset.raw){it[k]=ul._q;it[k+'c']=null}
+ else{const p=ul._r[+li.dataset.n];it[k]=p.label;it[k+'c']=[p.lat,p.lon]}
+ row.querySelector(`[data-k="${k}"]`).value=it[k];ul.hidden=true;mapLink(i);
+ if(it[k+'c']){if(it.oc&&it.dc)route(i,row);else row.querySelector('[data-hint]').textContent='Address applied. Now set the other address.'}
+ else geocode(i,k,[it[k]])}
+$('#items').addEventListener('mousedown',e=>{const li=e.target.closest('.sg li[data-n],.sg li[data-raw]');if(!li)return;e.preventDefault();pick(li)});
+$('#items').addEventListener('touchend',e=>{const li=e.target.closest('.sg li[data-n],.sg li[data-raw]');if(!li)return;e.preventDefault();pick(li)});
+$('#items').addEventListener('click',e=>{const f=e.target.dataset.find;if(f){openFind(+e.target.closest('.item').dataset.i,f);return}
+ if(e.target.dataset.del!==undefined){items.splice(+e.target.closest('.item').dataset.i,1);render()}});
+document.addEventListener('click',e=>{if(!e.target.closest('.sg')&&!e.target.matches('[data-k=o],[data-k=d]'))document.querySelectorAll('.sg').forEach(u=>u.hidden=true)});
+$('#ksave').onclick=()=>{try{localStorage.setItem(KEYNAME,$('#kkey').value.trim())}catch(e){}location.reload()};
+$('#kclear').onclick=()=>{try{localStorage.removeItem(KEYNAME)}catch(e){}$('#kkey').value='';location.reload()};
+$('#mclose').onclick=()=>{$('#modal').hidden=true};
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').hidden=true});
+$('#add').onclick=()=>{items.push(newItem());render()};
+loadKakao();
+render();
+</script>
+</body>
+</html>
